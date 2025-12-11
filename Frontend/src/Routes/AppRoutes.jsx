@@ -1,0 +1,31 @@
+import React from 'react'
+import {BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom'
+import UserRegister from '../pages/UserRegisterFixed'
+import UserLogin from '../pages/UserLogin'
+import FoodPartnerRegister from '../pages/FoodPartnerRegister'
+import FoodPartnerLogin from '../pages/FoodPartnerLogin'
+import ChooseAccount from '../pages/ChooseAccount'
+import Reels from '../pages/Reels'
+import Home from '../pages/general/home'
+import CreateFood from '../pages/food-partener/CreateFood'
+import Profile from '../pages/food-partener/Profile'
+const AppRoutes = () => {
+  return (
+    <Router>
+        <Routes>
+    <Route path='/reels' element={<Reels/>}/>
+
+      <Route path='/register' element={<ChooseAccount/>}/>
+      <Route path='/user/register' element={<UserRegister/>}/>
+       <Route path='/user/login' element={<UserLogin/>}/>
+       <Route path='/food-partner/register' element={<FoodPartnerRegister/>}/>            
+       <Route path='/food-partner/login' element={<FoodPartnerLogin/>}/>
+      <Route path='/food-partner/:id' element={<Profile/>}/>
+       <Route path="/"element={<Home/>}/>
+       <Route path="/create-food" element={<CreateFood />} />
+        </Routes>
+    </Router>
+  )
+}
+
+export default AppRoutes
