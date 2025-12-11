@@ -6,7 +6,7 @@ import FoodPartnerRegister from '../pages/FoodPartnerRegister'
 import FoodPartnerLogin from '../pages/FoodPartnerLogin'
 import ChooseAccount from '../pages/ChooseAccount'
 import Reels from '../pages/Reels'
-import Home from '../pages/general/home'
+import Home from '../pages/general/Home'
 import CreateFood from '../pages/food-partener/CreateFood'
 import Profile from '../pages/food-partener/Profile'
 const AppRoutes = () => {
