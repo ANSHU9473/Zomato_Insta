@@ -156,29 +156,34 @@ const Reels = () => {
 
   return (
     <div className="reels-container" ref={containerRef}>
-      {sourceItems.map((item, index) => (
-        <section className="reel" key={item.foodPartner || item._id || item.id || index}>
-          <video
-            className="reel-video"
-            src={item.videoUrl || item.video || item.url}
-            muted
-            playsInline
-            loop
-            preload="metadata"
-            autoPlay
-          />
+      {sourceItems.map((item, index) => {
+        // compute a stable string key: prefer foodPartner._id when populated, then item._id, then index
+        const partnerId = item.foodPartner && typeof item.foodPartner === 'object' ? (item.foodPartner._id || item.foodPartner.id) : item.foodPartner
+        const key = partnerId || item._id || item.id || index
+        return (
+          <section className="reel" key={String(key)}>
+            <video
+              className="reel-video"
+              src={item.videoUrl || item.video || item.url}
+              muted
+              playsInline
+              loop
+              preload="metadata"
+              autoPlay
+            />
 
-          <div className="reel-overlay">
-            <div className="reel-meta">
-              <h3 className="reel-title">{item.title || `Video ${index+1}`}</h3>
-              <p className="reel-desc">{item.description || ''}</p>
-              {/* debug: show computed partner id for this reel */}
-              <div style={{marginTop:8, color:'#ddd', fontSize:12}}>partner id: <code style={{color:'#fff'}}>{(item.foodPartner && item.foodPartner._id) ? item.foodPartner._id : (item.foodPartner || item._id || item.id || `fallback-${index}`)}</code></div>
-              <Link className="visit-btn" to={'/food-partner/' + (item.foodPartner && item.foodPartner._id ? item.foodPartner._id : (item.foodPartner || item._id || item.id || `fallback-${index}`))}>Visit Store</Link>
+            <div className="reel-overlay">
+              <div className="reel-meta">
+                <h3 className="reel-title">{item.title || `Video ${index+1}`}</h3>
+                <p className="reel-desc">{item.description || ''}</p>
+                {/* debug: show computed partner id for this reel */}
+                <div style={{marginTop:8, color:'#ddd', fontSize:12}}>partner id: <code style={{color:'#fff'}}>{partnerId || item._id || item.id || `fallback-${index}`}</code></div>
+                <Link className="visit-btn" to={'/food-partner/' + (partnerId || item._id || item.id || `fallback-${index}`)}>Visit Store</Link>
+              </div>
             </div>
-          </div>
-        </section>
-      ))}
+          </section>
+        )
+      })}
     </div>
   )
 }

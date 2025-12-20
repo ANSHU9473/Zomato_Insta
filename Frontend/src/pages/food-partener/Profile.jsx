@@ -9,6 +9,7 @@ const Profile = () => {
   const [videos, setVideos] = useState([])
   const [loading, setLoading] = useState(true)
 
+  const [currentPartnerId, setCurrentPartnerId] = useState(null)
   useEffect(() => {
     let mounted = true
     const load = async () => {
@@ -31,6 +32,14 @@ const Profile = () => {
         })
         setVideos(filtered)
       } catch (err) {
+        // try to fetch current authenticated partner id (optional)
+        try {
+          const me = await axios.get('http://localhost:3000/api/auth/foodpartner/me', { withCredentials: true })
+          const meId = me?.data?.foodPartener?._id || me?.data?.foodPartener?.id
+          setCurrentPartnerId(meId)
+        } catch (e) {
+          // ignore if not logged in
+        }
         console.error('Profile load error', err)
       } finally {
         if (mounted) setLoading(false)
@@ -46,6 +55,11 @@ const Profile = () => {
   return (
     <div className="profile-page">
       <div style={{position:'fixed', right:12, top:12, zIndex:40, background:'rgba(0,0,0,0.5)', color:'#fff', padding:8, borderRadius:6, fontSize:12}}>
+      <div style={{display:'flex', justifyContent:'flex-end', padding:12}}>
+        {String(currentPartnerId) === String(id) && (
+          <button onClick={() => window.location.assign('/create-food')} style={{padding:'8px 12px', background:'#ff5a5f', color:'#fff', border:'none', borderRadius:6}}>Create Food</button>
+        )}
+      </div>
         <div>profile id: <code style={{color:'#fff'}}>{id}</code></div>
         <div style={{marginTop:6}}>partner._id: <code style={{color:'#fff'}}>{partner._id || partner.id || '–'}</code></div>
       </div>

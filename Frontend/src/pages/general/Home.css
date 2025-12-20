@@ -1,0 +1,20 @@
+
+.home-container {
+  display: flex;
+  height: 100vh;
+  padd
+  justify-content: center;
+  align-items: center;
+  background-color: #f5f5f5;
+}
+
+.btn {
+  background-color: brown;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 15px;
+  color: white;
+  border-radius: 6px;
+  text-decoration: none;
+}

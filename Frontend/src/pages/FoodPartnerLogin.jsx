@@ -23,13 +23,20 @@ const FoodPartnerLogin = () => {
     e.preventDefault();
     // Form submission logic here
     console.log('Food Partner Login:', formData);
-    axios.post("http://localhost:3000/api/food-partner/login",{
-      email:formData.email,
-      password:formData.password
-    },{
-        withCredentials:true
-    })
-    navigate("/create-food");
+    (async () => {
+      try {
+        const res = await axios.post('http://localhost:3000/api/auth/foodpartner/login', {
+          email: formData.email,
+          password: formData.password
+        }, { withCredentials: true })
+        const partnerId = res?.data?.foodPartener?._id || res?.data?.foodPartener?.id
+        if (partnerId) navigate(`/food-partner/${partnerId}`)
+        else navigate('/create-food')
+      } catch (err) {
+        console.error('Food partner login error', err)
+        alert(err?.response?.data?.message || err.message || 'Login failed')
+      }
+    })()
   };
 
   return (

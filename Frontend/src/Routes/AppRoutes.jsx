@@ -1,5 +1,6 @@
 import React from 'react'
 import {BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom'
+import Header from '../components/Header'
 import UserRegister from '../pages/UserRegisterFixed'
 import UserLogin from '../pages/UserLogin'
 import FoodPartnerRegister from '../pages/FoodPartnerRegister'
@@ -12,6 +13,7 @@ import Profile from '../pages/food-partener/Profile'
 const AppRoutes = () => {
   return (
     <Router>
+        <Header />
         <Routes>
     <Route path='/reels' element={<Reels/>}/>
 

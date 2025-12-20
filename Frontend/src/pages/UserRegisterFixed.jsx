@@ -33,7 +33,7 @@ const UserRegisterFixed = () => {
     });
     console.log(response.data);  
 
-    navigate("/");
+    navigate("/reels");
   };
 
   const handleChange = (e) => {

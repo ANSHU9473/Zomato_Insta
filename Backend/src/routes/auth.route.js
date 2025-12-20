@@ -10,6 +10,9 @@ router.get('/user/logout',authController.logoutUser);
 router.post('/foodpartner/register',authController.registerFoodPartener);
 router.post('/foodpartner/login',authController.loginFoodPartener);
 router.get('/foodpartner/logout',authController.logoutFoodPartener);
+// current authenticated partner
+const { authFoodPartnerMiddleware } = require('../middlewares/auth.middleware');
+router.get('/foodpartner/me', authFoodPartnerMiddleware, authController.getCurrentFoodPartner);
 // Public: get food partner profile by id
 router.get('/foodpartner/:id', authController.getFoodPartnerProfile);
 module.exports=router;

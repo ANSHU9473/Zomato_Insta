@@ -7,12 +7,13 @@ import {useNavigate} from 'react-router-dom';
 const FoodPartnerRegister = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    RestaurantName: '',
-    name: '',
+    name: '', // restaurant name
+    contactName: '',
     email: '',
     phone: '',
     password: ''
   });
+  const [videoFile, setVideoFile] = useState(null)
   const location = useLocation();
 
   const handleChange = (e) => {
@@ -23,20 +24,41 @@ const FoodPartnerRegister = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleFile = (e) => {
+    const f = e.target.files && e.target.files[0]
+    setVideoFile(f || null)
+  }
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Form submission logic here
-    console.log('Food Partner Register:', formData);
-    axios.post("http://localhost:3000/api/auth/food-partner/register",{
-      restaurantName:formData.RestaurantName,
-      name:formData.name,
-      email:formData.email,
-      phone:formData.phone,
-      password:formData.password
+    try {
+      const payload = {
+        RestaurantName: formData.name,
+        contactName: formData.contactName,
+        email: formData.email,
+        password: formData.password,
+        phone: formData.phone
+      }
+      // register partner (this sets token2 cookie)
+      const res = await axios.post('http://localhost:3000/api/auth/foodpartner/register', payload, { withCredentials: true })
+      const partnerId = res?.data?.foodPartener?._id || res?.data?.foodPartener?.id
+
+      // if a video was provided, upload it to /api/food (requires auth cookie set by registration)
+      if (videoFile) {
+        const fd = new FormData()
+        fd.append('video', videoFile)
+        fd.append('name', `${formData.name} intro`)
+        fd.append('description', `${formData.name} uploaded video`)
+        await axios.post('http://localhost:3000/api/food', fd, { withCredentials: true, headers: { 'Content-Type': 'multipart/form-data' } })
+      }
+
+      // navigate to partner profile
+      if (partnerId) navigate(`/food-partner/${partnerId}`)
+      else navigate('/create-food')
+    } catch (err) {
+      console.error('Register partner error', err)
+      alert(err?.response?.data?.message || err.message || 'Registration failed')
     }
-  ,{        withCredentials:true
-      })
-      navigate("/create-food");
   };
 
   return (
@@ -57,26 +79,26 @@ const FoodPartnerRegister = () => {
 
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="restaurantName">Restaurant Name</label>
+            <label htmlFor="name">Restaurant Name</label>
             <input
               type="text"
-              id="restaurantName"
-              name="restaurantName"
+              id="name"
+              name="name"
               placeholder="Enter your restaurant name"
-              value={formData.restaurantName}
+              value={formData.name}
               onChange={handleChange}
               required
             />
           </div>
 
           <div className="form-group">
-            <label htmlFor="ownerName">Owner Name</label>
+            <label htmlFor="contactName">Contact Name</label>
             <input
               type="text"
-              id="ownerName"
-              name="ownerName"
-              placeholder="Enter your full name"
-              value={formData.ownerName}
+              id="contactName"
+              name="contactName"
+              placeholder="Enter contact / owner name"
+              value={formData.contactName}
               onChange={handleChange}
               required
             />
@@ -119,6 +141,11 @@ const FoodPartnerRegister = () => {
               onChange={handleChange}
               required
             />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="video">Intro Video (optional)</label>
+            <input type="file" id="video" name="video" accept="video/*" onChange={handleFile} />
           </div>
 
           
