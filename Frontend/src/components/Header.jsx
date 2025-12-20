@@ -25,10 +25,8 @@ const Header = () => {
       </div>
       <div style={{display:'flex', gap:12}}>
         <Link to="/reels" style={{background:'linear-gradient(90deg,#ff7a7a,#ff5a5f)', padding:'8px 12px', borderRadius:8, color:'#fff', textDecoration:'none'}}>Food Zone</Link>
-        {partnerId ? (
+        {partnerId && (
           <button onClick={()=> navigate('/create-food')} style={{padding:'8px 12px', borderRadius:8, background:'#ff5a5f', color:'#fff', border:'none'}}>Create Food</button>
-        ) : (
-          <Link to="/food-partner/login" style={{padding:'8px 12px', borderRadius:8, background:'#333', color:'#fff', textDecoration:'none'}}>Partner Login</Link>
         )}
       </div>
     </header>
