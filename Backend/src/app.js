@@ -5,8 +5,17 @@ const authRoutes = require("./routes/auth.route");
 const foodRoutes = require("./routes/food.routes");
 const cors=require("cors");
 const app = express();
+// Allow frontend origins used in development (echo the incoming origin when allowed)
+const allowedOrigins = ['http://localhost:5173', 'http://localhost:5174']
 app.use(cors({
-    origin:"http://localhost:5173",
+    origin: function(origin, callback){
+        // allow requests with no origin (like curl, postman)
+        if(!origin) return callback(null, true)
+        if(allowedOrigins.indexOf(origin) !== -1){
+            return callback(null, true)
+        }
+        return callback(new Error('CORS policy: Origin not allowed'))
+    },
     credentials:true
 }));
 
