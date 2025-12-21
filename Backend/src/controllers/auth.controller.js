@@ -167,3 +167,18 @@ async function getCurrentFoodPartner(req, res) {
 }
 
 module.exports.getCurrentFoodPartner = getCurrentFoodPartner;
+
+// ------------------------ GET CURRENT AUTHENTICATED USER ------------------------
+async function getCurrentUser(req, res) {
+    try {
+        if (!req.user) return res.status(401).json({ message: 'Not authenticated' })
+        const user = req.user.toObject()
+        delete user.password
+        return res.status(200).json({ user })
+    } catch (err) {
+        console.error('getCurrentUser error:', err.message)
+        return res.status(500).json({ message: 'Server error' })
+    }
+}
+
+module.exports.getCurrentUser = getCurrentUser;
