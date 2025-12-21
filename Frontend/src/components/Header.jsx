@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import axios from 'axios'
 
 const Header = () => {
   const [partnerId, setPartnerId] = useState(null)
   const [userId, setUserId] = useState(null)
   const navigate = useNavigate()
+  const location = useLocation()
 
   useEffect(() => {
     let mounted = true
@@ -25,7 +26,7 @@ const Header = () => {
       })
       .catch(()=>{})
     return () => { mounted = false }
-  }, [])
+  }, [location])
 
   return (
     <header style={{display:'flex', alignItems:'center', justifyContent:'space-between', padding:12, borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
