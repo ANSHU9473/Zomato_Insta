@@ -20,18 +20,26 @@ const UserLogin = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Form submission logic here
     console.log('User Login:', formData);
 
-    axios.post("http://localhost:3000/api/user/login",{
-      email:formData.email,
-      password:formData.password
-    },{
-        withCredentials:true
-    })
-    navigate("/reels");
+    try {
+      const res = await axios.post("http://localhost:3000/api/auth/user/login", {
+        email: formData.email,
+        password: formData.password
+      }, { withCredentials: true });
+
+      // navigate only when login succeeded
+      if (res?.data?.user?._id) {
+        navigate("/reels");
+      } else {
+        alert(res?.data?.message || 'Login failed');
+      }
+    } catch (err) {
+      console.error('User login error', err);
+      alert(err?.response?.data?.message || err.message || 'Login failed');
+    }
   };
 
   return (

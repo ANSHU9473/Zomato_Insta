@@ -1,34 +1,45 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
+const cors = require("cors");
 
 const authRoutes = require("./routes/auth.route");
 const foodRoutes = require("./routes/food.routes");
-const cors=require("cors");
+
 const app = express();
-// Allow frontend origins used in development (echo the incoming origin when allowed)
-const allowedOrigins = ['http://localhost:5173', 'http://localhost:5174']
+
+// ✅ Allowed origins (ADD VERCEL HERE)
+const allowedOrigins = [
+    'http://localhost:5173',
+    'http://localhost:5174',
+    'https://zomato-insta-mu.vercel.app'
+];
+
+// ✅ CORS — MUST BE FIRST
 app.use(cors({
-    origin: function(origin, callback){
-        // allow requests with no origin (like curl, postman)
-        if(!origin) return callback(null, true)
-        if(allowedOrigins.indexOf(origin) !== -1){
-            return callback(null, true)
+    origin: function (origin, callback) {
+        // allow Postman / server-to-server requests
+        if (!origin) return callback(null, true);
+
+        if (allowedOrigins.includes(origin)) {
+            return callback(null, true);
         }
-        return callback(new Error('CORS policy: Origin not allowed'))
+
+        // ❌ reject silently (important)
+        return callback(null, false);
     },
-    credentials:true
+    credentials: true
 }));
 
-// 1️⃣ BASIC MIDDLEWARES FIRST
+// ✅ Middlewares
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// 2️⃣ ROUTES AFTER BODY PARSERS
+// ✅ Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/food', foodRoutes);
 
-// TEST ROUTE
+// ✅ Test route
 app.get("/", (req, res) => {
     res.send("hello world");
 });
